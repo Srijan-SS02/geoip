@@ -1,26 +1,43 @@
-// __tests__/app.test.js
-
 const request = require('supertest');
-const express = require('express');
-const app = require('../app'); // Replace '../app' with the correct path to your Express app file
+const app = require('../app.js'); // Import your app here
 
-describe('Express App', () => {
-  it('should serve index.html on /home route', async () => {
-    const response = await request(app).get('/home');
+describe('GET /', () => {
+  it('should return the index.html page', async () => {
+    const response = await request(app).get('/');
     expect(response.status).toBe(200);
-    expect(response.header['content-type']).toContain('text/html');
+    expect(response.headers['content-type']).toContain('text/html');
+  });
+});
+
+describe('GET /city/:ip', () => {
+  it('should return geolocation data for a valid IP', async () => {
+    const response = await request(app).get('/city/8.8.8.8'); // Replace with a valid IP address
+    expect(response.status).toBe(200);
+    expect(response.body.status).toBe('success');
   });
 
-  it('should return city information for a valid IP', async () => {
-    const validIP = '128.101.101.101'; // Replace with a valid IP from your database
-    const response = await request(app).get(`/city/${validIP}`);
+  it('should return an error for an invalid IP', async () => {
+    const response = await request(app).get('/city/invalid_ip');
+    expect(response.status).toBe(200); // Handle error gracefully in your app, so it returns 200 status
+    expect(response.body.status).toBe('fail');
+  });
+});
+
+describe('POST /city/batch', () => {
+  it('should return geolocation data for an array of valid IPs', async () => {
+    const ips = ['8.8.8.8', '4.4.4.4']; // Replace with valid IP addresses
+    const response = await request(app)
+      .post('/city/batch')
+      .send({ ips });
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty('city'); // Adjust the property name as per your data structure
+    expect(Array.isArray(response.body)).toBe(true);
   });
 
-  it('should handle invalid IP addresses', async () => {
-    const invalidIP = '0.0';
-    const response = await request(app).get(`/city/${invalidIP}`);
-    expect(response.status).toBe(500); // Adjust this based on how you handle errors
+  it('should handle errors when processing IP addresses', async () => {
+    const ips = ['8.8.8.8', 'invalid_ip']; // Include an invalid IP
+    const response = await request(app)
+      .post('/city/batch')
+      .send({ ips });
+    expect(response.status).toBe(500); // Handle error gracefully in your app, so it returns 500 status
   });
 });
