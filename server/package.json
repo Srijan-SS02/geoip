@@ -13,6 +13,7 @@
   "dependencies": {
     "@maxmind/geoip2-node": "^4.2.0",
     "@stricjs/router": "^5.0.3",
+    "bun": "^1.0.7",
     "express": "^4.18.2",
     "maxmind": "^4.3.16",
     "maxmind-db-reader": "^0.2.1",
@@ -20,6 +21,9 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "testMatch": [
+      "**/__tests__/**/*.test.mjs"
+    ],
     "coveragePathIgnorePatterns": [
       "/node_modules/"
     ]

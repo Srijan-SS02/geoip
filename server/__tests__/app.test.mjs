@@ -1,5 +1,5 @@
-const request = require('supertest');
-const app = require('../app.js'); // Import your app here
+import request from 'supertest';
+import app from '../app.mjs';
 
 describe('GET /', () => {
   it('should return the index.html page', async () => {
