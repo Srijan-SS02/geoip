@@ -2,7 +2,6 @@
   "name": "mmdb",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "bun run app.js",
@@ -23,7 +22,7 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/"
     ]
-  },
+  },    
   "devDependencies": {
     "jest": "^29.7.0",
     "supertest": "^6.3.3"
